@@ -1,9 +1,14 @@
 # Team <name>
 
 ## Participants
-- Name (role(s) played today)
-- Name (role(s) played today)
-- Name (role(s) played today)
+- Gach Jacek (developer)
+- Kurkiewicz Marlena ()
+- Weselski Jarosław (developer)
+- Niemiec Sylwester ()
+- Szymczyk Michał (PM)
+- Wandalowski Marcin (developer)
+- Miechowicz Krzysztof (developer)
+- Krasnopolska Beata (developer)
 
 ## Scenario
 Scenario 1: Code Modernization
