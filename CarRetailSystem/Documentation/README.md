@@ -6,11 +6,14 @@ This folder contains the full analysis and modernization plan for the CarRetailS
 
 | File | Contents |
 |------|----------|
+| [00_BUSINESS_BACKGROUND.md](00_BUSINESS_BACKGROUND.md) | **Living document** — business drivers, expected outcomes, modernization change log |
 | [01_CURRENT_STATE.md](01_CURRENT_STATE.md) | Technology stack, architecture, code inventory, business domain |
 | [02_SECURITY_VULNERABILITIES.md](02_SECURITY_VULNERABILITIES.md) | All identified vulnerabilities with locations and severity |
 | [03_TARGET_ARCHITECTURE.md](03_TARGET_ARCHITECTURE.md) | Recommended modern architecture and technology stack |
 | [04_MIGRATION_STRATEGY.md](04_MIGRATION_STRATEGY.md) | Strangler Fig migration plan, phases, timelines |
 | [05_QUICK_WINS.md](05_QUICK_WINS.md) | Immediate fixes applicable to the legacy system today |
+
+> `00_BUSINESS_BACKGROUND.md` is the only file in this folder that is updated continuously. All others are point-in-time analysis documents.
 
 ## Summary
 
