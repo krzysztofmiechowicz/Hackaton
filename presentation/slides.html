@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Team 16 — Code Modernization Hackathon</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #1a1a2e;
+    color: #333;
+  }
+
+  /* ── PRINT → PDF ── */
+  @media print {
+    body { background: white; }
+    .slide { page-break-after: always; box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; }
+    .slide:last-child { page-break-after: avoid; }
+    .print-btn { display: none !important; }
+  }
+
+  @page { size: A4 landscape; margin: 0; }
+
+  /* ── SLIDE BASE ── */
+  .slide {
+    width: 297mm;
+    min-height: 210mm;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── ACCENT BAR ── */
+  .slide::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, #003366, #0066cc, #00aaff);
+    flex-shrink: 0;
+  }
+
+  /* ── SLIDE INNER ── */
+  .slide-inner {
+    padding: 36px 48px 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SLIDE FOOTER ── */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 48px;
+    background: #f7f9fc;
+    border-top: 1px solid #e0e8f0;
+    font-size: 11px;
+    color: #888;
+    flex-shrink: 0;
+  }
+  .slide-footer .logo { font-weight: 700; color: #003366; letter-spacing: 0.5px; }
+
+  /* ── TYPOGRAPHY ── */
+  .tag {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #003366;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 42px; color: #003366; line-height: 1.15; font-weight: 800; }
+  h2 { font-size: 28px; color: #003366; margin-bottom: 20px; font-weight: 700; }
+  h3 { font-size: 17px; color: #003366; margin-bottom: 8px; font-weight: 700; }
+  p  { font-size: 15px; line-height: 1.6; color: #444; }
+  ul { padding-left: 20px; }
+  li { font-size: 14px; line-height: 1.7; color: #444; }
+
+  .subtitle { font-size: 20px; color: #555; margin-top: 10px; font-weight: 400; }
+  .big-num { font-size: 56px; font-weight: 800; color: #003366; line-height: 1; }
+  .big-label { font-size: 13px; color: #666; margin-top: 4px; }
+
+  /* ── LAYOUT HELPERS ── */
+  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+  .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; }
+  .cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex: 1; }
+  .center { text-align: center; justify-content: center; align-items: center; }
+
+  /* ── CARDS ── */
+  .card {
+    background: #f7f9fc;
+    border: 1px solid #dce8f5;
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .card.danger { background: #fff5f5; border-color: #fbbcbc; }
+  .card.success { background: #f0faf4; border-color: #a8d5b8; }
+  .card.warning { background: #fffbf0; border-color: #f5d87a; }
+  .card.blue { background: #e8f4ff; border-color: #a0c8f0; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge.red { background: #fde8e8; color: #c0392b; }
+  .badge.green { background: #e8f8ee; color: #1a7a40; }
+  .badge.blue { background: #e8f0fe; color: #1a4fa0; }
+  .badge.grey { background: #eee; color: #666; }
+
+  /* ── TITLE SLIDE ── */
+  .slide.title-slide { background: linear-gradient(135deg, #001f4d 0%, #003a8c 60%, #0057cc 100%); }
+  .slide.title-slide::before { background: linear-gradient(90deg, #00aaff, #ffffff40); }
+  .slide.title-slide h1 { color: white; font-size: 48px; }
+  .slide.title-slide .subtitle { color: #a0c8ff; }
+  .slide.title-slide .tag { background: rgba(255,255,255,0.15); color: #a0d8ff; }
+  .slide.title-slide p { color: #cce0ff; }
+  .slide.title-slide .slide-footer { background: rgba(0,0,0,0.2); border-top-color: rgba(255,255,255,0.1); color: #88aacc; }
+  .slide.title-slide .logo { color: #a0d0ff !important; }
+
+  /* ── SECTION DIVIDER ── */
+  .slide.divider { background: linear-gradient(135deg, #003366 0%, #0055aa 100%); }
+  .slide.divider::before { background: linear-gradient(90deg, #00aaff, #ffffff30); }
+  .slide.divider h2 { color: white; font-size: 36px; }
+  .slide.divider p { color: #a0c8ff; }
+  .slide.divider .slide-footer { background: rgba(0,0,0,0.2); border-top-color: rgba(255,255,255,0.1); color: #88aacc; }
+  .slide.divider .logo { color: #a0d0ff !important; }
+
+  /* ── ARROW ── */
+  .arrow { font-size: 28px; color: #0066cc; text-align: center; padding: 8px 0; }
+
+  /* ── PHASE TIMELINE ── */
+  .timeline { display: flex; gap: 0; flex: 1; align-items: stretch; }
+  .phase {
+    flex: 1;
+    background: #f0f5ff;
+    border: 1px solid #c0d4f0;
+    padding: 14px 12px;
+    position: relative;
+    font-size: 12px;
+  }
+  .phase:not(:last-child)::after {
+    content: '▶';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #0066cc;
+    z-index: 2;
+  }
+  .phase .phase-num { font-size: 10px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px; }
+  .phase .phase-title { font-size: 13px; font-weight: 700; color: #003366; margin: 4px 0; }
+  .phase .phase-weeks { font-size: 11px; color: #888; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #003366; color: white; padding: 8px 12px; text-align: left; font-weight: 600; }
+  td { padding: 7px 12px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #f7f9fc; }
+
+  /* ── TEAM GRID ── */
+  .team-member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f7f9fc;
+    border: 1px solid #dce8f5;
+    border-radius: 6px;
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #003366, #0066cc);
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .member-name { font-size: 13px; font-weight: 600; color: #222; }
+  .member-role { font-size: 11px; color: #888; }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #003366;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 999;
+  }
+  .print-btn:hover { background: #0055aa; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">Drukuj / Zapisz PDF</button>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide title-slide">
+  <div class="slide-inner" style="justify-content:center; gap:16px;">
+    <div class="tag">Anthropic Hackathon 2025 · Scenario 1</div>
+    <h1>CarRetailSystem<br>Modernization</h1>
+    <p class="subtitle">Legacy Code Migration · Classic ASP + VB6 → ASP.NET Core 8 + React 18</p>
+    <div style="margin-top:24px; display:flex; gap:32px; flex-wrap:wrap;">
+      <div><span style="color:#a0c8ff;font-size:13px;">TEAM</span><br><span style="color:white;font-size:18px;font-weight:700;">Team 16</span></div>
+      <div><span style="color:#a0c8ff;font-size:13px;">SCENARIO</span><br><span style="color:white;font-size:18px;font-weight:700;">Code Modernization</span></div>
+      <div><span style="color:#a0c8ff;font-size:13px;">DATA</span><br><span style="color:white;font-size:18px;font-weight:700;">Kwiecień 2025</span></div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span class="logo">TEAM 16</span>
+    <span>Anthropic Hackathon 2025</span>
+    <span>1 / 10</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 2 — ZESPÓŁ
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Zespół</div>
+    <h2>Team 16</h2>
+    <div class="cols-4" style="align-items:start;">
+      <div class="team-member"><div class="avatar">JG</div><div><div class="member-name">Jacek Gach</div><div class="member-role">Developer</div></div></div>
+      <div class="team-member"><div class="avatar">MK</div><div><div class="member-name">Marlena Kurkiewicz</div><div class="member-role">—</div></div></div>
+      <div class="team-member"><div class="avatar">JW</div><div><div class="member-name">Jarosław Weselski</div><div class="member-role">Developer</div></div></div>
+      <div class="team-member"><div class="avatar">SN</div><div><div class="member-name">Sylwester Niemiec</div><div class="member-role">—</div></div></div>
+      <div class="team-member"><div class="avatar">MS</div><div><div class="member-name">Michał Szymczyk</div><div class="member-role">PM</div></div></div>
+      <div class="team-member"><div class="avatar">MW</div><div><div class="member-name">Marcin Wandalowski</div><div class="member-role">Developer</div></div></div>
+      <div class="team-member"><div class="avatar">KM</div><div><div class="member-name">Krzysztof Miechowicz</div><div class="member-role">Legacy Developer</div></div></div>
+      <div class="team-member"><div class="avatar">BK</div><div><div class="member-name">Beata Krasnopolska</div><div class="member-role">Developer</div></div></div>
+    </div>
+    <div style="margin-top:auto; padding-top:20px;">
+      <div class="card blue">
+        <p><strong>Misja:</strong> Zmodernizować 15-letni legacy system sprzedaży aut z Classic ASP + VB6 na nowoczesny stack zgodny ze standardami bezpieczeństwa 2025.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>2 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 3 — PROBLEM
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Problem</div>
+    <h2>Legacy system — stan wyjściowy</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Stack technologiczny</h3>
+        <table>
+          <tr><th>Warstwa</th><th>Technologia</th></tr>
+          <tr><td>Frontend</td><td>Classic ASP / VBScript</td></tr>
+          <tr><td>Logika biznesowa</td><td>VB6 COM DLL (5 komponentów)</td></tr>
+          <tr><td>Baza danych</td><td>SQL Server 7.0 / 2000</td></tr>
+          <tr><td>Serwer</td><td>IIS 5.0 / 6.0</td></tr>
+          <tr><td>Wiek systemu</td><td>15+ lat</td></tr>
+          <tr><td>Rozmiar kodu</td><td>~2 000 LOC</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Kluczowe problemy</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="card danger"><strong>17 podatności bezpieczeństwa</strong><br><span style="font-size:12px;color:#666;">SQL Injection, plain-text passwords, hardcoded credentials, brak HTTPS</span></div>
+          <div class="card warning"><strong>Brak skalowalności</strong><br><span style="font-size:12px;color:#666;">Monolityczna architektura, sesje stanowe, brak REST API</span></div>
+          <div class="card warning"><strong>3 DLL-ki bez kodu źródłowego</strong><br><span style="font-size:12px;color:#666;">CustomerMgmt.dll, ReportGenerator.dll, Utilities.dll</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>3 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 4 — BEZPIECZEŃSTWO
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Security</div>
+    <h2>17 podatności — najważniejsze</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Krytyczne <span class="badge red">CRITICAL</span></h3>
+        <ul>
+          <li>SQL Injection w 6+ miejscach (login.asp:28, inventory.asp:59-66, CarInventory.vb:50/70/83, SalesOrder.vb:59/78/82)</li>
+          <li>Hasła przechowywane w plain text</li>
+          <li>Hardcoded credentials: <code style="font-size:11px;background:#f5f5f5;padding:1px 4px;">sa/Admin@123</code> w config.asp i VB6</li>
+          <li>Brak HTTPS — cały ruch nieszyfrowany</li>
+          <li>XSS — Session("UserName") bez escapowania</li>
+          <li>Brak ochrony CSRF</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Poważne <span class="badge grey">MAJOR</span></h3>
+        <ul>
+          <li>Session hijacking (cookie bez HttpOnly/Secure)</li>
+          <li>Brak rate limiting na login</li>
+          <li>Błędy bazy danych wyświetlane użytkownikowi</li>
+          <li>Logowanie do pliku (nie structured logging)</li>
+          <li>SanitizeInput() robi tylko Trim()</li>
+          <li>ValidatePassword() — minimum 6 znaków</li>
+        </ul>
+        <div style="margin-top:16px;" class="card success">
+          <strong>Dobra wiadomość:</strong> stored procedures są poprawnie sparametryzowane — SQL Injection jest wyłącznie w warstwie ASP/VB6.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>4 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 5 — ARCHITEKTURA DOCELOWA
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Architektura</div>
+    <h2>Before → After</h2>
+    <div class="cols-2">
+      <div>
+        <h3 style="color:#c0392b;">Legacy (przed)</h3>
+        <div class="card danger" style="font-size:13px; line-height:1.8;">
+          <strong>Classic ASP / VBScript</strong> (8 stron)<br>
+          ↓ COM interop<br>
+          <strong>VB6 DLL</strong>: CarInventory, SalesOrder, CustomerMgmt, ReportGenerator, Utilities<br>
+          ↓ ADO / string-concat SQL<br>
+          <strong>SQL Server 7.0</strong> (5 tabel, 4 SP, 1 trigger)<br>
+          ↓<br>
+          <strong>IIS 5.0/6.0</strong> · 32-bit only · stateful sessions
+        </div>
+      </div>
+      <div>
+        <h3 style="color:#1a7a40;">Target (po)</h3>
+        <div class="card success" style="font-size:13px; line-height:1.8;">
+          <strong>React 18 + TypeScript + Vite + Tailwind</strong><br>
+          ↕ HTTPS + JWT Bearer<br>
+          <strong>ASP.NET Core 8 Web API</strong><br>
+          Auth · Inventory · Sales · Customers · Reports<br>
+          ↓ EF Core 8 (LINQ only)<br>
+          <strong>SQL Server 2022</strong> · Redis cache<br>
+          ↓<br>
+          <strong>Docker</strong> · Serilog → Azure App Insights
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>5 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 6 — STRATEGIA MIGRACJI
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Strategia</div>
+    <h2>Strangler Fig Pattern — 5 faz, 14 tygodni</h2>
+    <div class="timeline" style="margin-bottom:20px;">
+      <div class="phase"><div class="phase-num">Faza 1</div><div class="phase-title">Foundation</div><div class="phase-weeks">Tygodnie 1–2</div><div style="margin-top:8px;font-size:11px;color:#555;">Scaffolding, EF Core baseline, legacy hotfixes</div></div>
+      <div class="phase" style="background:#e8f4ff;border-color:#a0c8f0;"><div class="phase-num">Faza 2</div><div class="phase-title">Auth</div><div class="phase-weeks">Tygodnie 3–4</div><div style="margin-top:8px;font-size:11px;color:#555;">JWT, bcrypt, migracja haseł on-login</div></div>
+      <div class="phase"><div class="phase-num">Faza 3</div><div class="phase-title">Core API</div><div class="phase-weeks">Tygodnie 5–8</div><div style="margin-top:8px;font-size:11px;color:#555;">Wszystkie endpointy, xUnit + Testcontainers</div></div>
+      <div class="phase" style="background:#e8f4ff;border-color:#a0c8f0;"><div class="phase-num">Faza 4</div><div class="phase-title">Frontend</div><div class="phase-weeks">Tygodnie 9–12</div><div style="margin-top:8px;font-size:11px;color:#555;">React SPA, Playwright E2E</div></div>
+      <div class="phase" style="background:#f0faf4;border-color:#a8d5b8;"><div class="phase-num">Faza 5</div><div class="phase-title">Cutover</div><div class="phase-weeks">Tygodnie 13–14</div><div style="margin-top:8px;font-size:11px;color:#555;">Blue-green deploy, DNS switch, 48h monitoring</div></div>
+    </div>
+    <div class="cols-2">
+      <div class="card blue">
+        <h3 style="font-size:14px;">Migracja haseł — bez resetu</h3>
+        <p style="font-size:12px;margin-top:6px;">Dodajemy kolumny <code>PasswordHash</code> + <code>PasswordMigrated</code>. Przy logowaniu walidujemy plain text → haszujemy bcrypt → ustawiamy flagę. Po migracji wszystkich użytkowników usuwamy kolumnę <code>Password</code>.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:14px;">Rollback w każdej chwili</h3>
+        <p style="font-size:12px;margin-top:6px;">Legacy system pozostaje uruchomiony przez cały czas migracji. Rollback = zmiana DNS z powrotem. Po 48h oknie monitoringu w tygodniu 14 — legacy archiwizujemy.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>6 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 7 — CO ZBUDOWALIŚMY
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Co zbudowaliśmy</div>
+    <h2>What We Built</h2>
+    <div class="cols-3">
+      <div>
+        <h3>Działa <span class="badge green">DONE</span></h3>
+        <ul>
+          <li style="color:#1a7a40;">[ wpisz co działa ]</li>
+          <li style="color:#1a7a40;">[ np. ASP.NET Core API — auth module ]</li>
+          <li style="color:#1a7a40;">[ np. React login page ]</li>
+          <li style="color:#1a7a40;">[ np. database_setup.sql + EF migrations ]</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Scaffold <span class="badge blue">PARTIAL</span></h3>
+        <ul>
+          <li style="color:#1a4fa0;">[ wpisz co jest scaffoldem ]</li>
+          <li style="color:#1a4fa0;">[ np. React inventory page — stub ]</li>
+          <li style="color:#1a4fa0;">[ np. Reports module — struktura bez impl ]</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Mockup <span class="badge grey">FAKED</span></h3>
+        <ul>
+          <li style="color:#888;">[ wpisz co jest udawane ]</li>
+          <li style="color:#888;">[ np. Redis cache — in-memory ]</li>
+          <li style="color:#888;">[ np. Email notifications ]</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:auto;padding-top:16px;" class="card warning">
+      <p style="font-size:13px;"><strong>Uwaga:</strong> Uzupełnij tę slajdkę o konkretne wyniki hackathonu — co faktycznie uruchomiliście, a co jest szkieletem lub zaślepką.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>7 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 8 — KLUCZOWE DECYZJE
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Architektura</div>
+    <h2>Kluczowe decyzje</h2>
+    <table>
+      <tr><th>Decyzja</th><th>Opcja wybrana</th><th>Uzasadnienie</th></tr>
+      <tr><td>Wzorzec migracji</td><td>Strangler Fig</td><td>Legacy zostaje uruchomione — zero downtime, rollback w każdej chwili</td></tr>
+      <tr><td>ORM</td><td>EF Core 8 (LINQ only)</td><td>Eliminuje SQL Injection — brak raw SQL strings w całym nowym kodzie</td></tr>
+      <tr><td>Auth</td><td>JWT Bearer (nie cookie)</td><td>CSRF nie dotyczy, stateless, skalowalne</td></tr>
+      <tr><td>Hasła</td><td>bcrypt cost factor 12</td><td>Migracja on-login bez resetu użytkowników</td></tr>
+      <tr><td>Transakcje</td><td>IDbContextTransaction</td><td>Wymóg atomowości: Sale + Stock update + Audit log</td></tr>
+      <tr><td>[ wpisz swoją ]</td><td>[ decyzja ]</td><td>[ uzasadnienie ]</td></tr>
+    </table>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>8 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 9 — JAK UŻYWALIŚMY CLAUDE CODE
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Claude Code</div>
+    <h2>Jak używaliśmy Claude Code</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Co działało najlepiej</h3>
+        <ul>
+          <li>[ wpisz konkretny przykład ]</li>
+          <li>[ np. analiza podatności w ASP/VB6 — jednym promptem ]</li>
+          <li>[ np. generowanie EF Core migrations z istniejącego SQL ]</li>
+          <li>[ np. tworzenie xUnit testów na podstawie legacy stored proc ]</li>
+          <li>[ np. CLAUDE.md jako kontekst dla całego zespołu ]</li>
+        </ul>
+        <div style="margin-top:16px;" class="card success">
+          <strong>Największa oszczędność czasu:</strong><br>
+          <span style="font-size:12px;">[ wpisz gdzie Claude Code oszczędziło najwięcej czasu ]</span>
+        </div>
+      </div>
+      <div>
+        <h3>Co nas zaskoczyło</h3>
+        <ul>
+          <li>[ wpisz co zaskoczyło ]</li>
+          <li>[ np. rozumienie kontekstu VB6 bez dodatkowego wyjaśniania ]</li>
+          <li>[ np. inicjatywa w wykrywaniu dodatkowych problemów ]</li>
+        </ul>
+        <div style="margin-top:16px;" class="card warning">
+          <strong>Wyzwania:</strong><br>
+          <span style="font-size:12px;">[ wpisz co działało gorzej lub wymagało korekty ]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>9 / 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 10 — CO DALEJ
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="tag">Następne kroki</div>
+    <h2>Gdybyśmy mieli więcej czasu...</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Priorytety (w kolejności)</h3>
+        <ol style="padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+          <li style="font-size:13px;">[ wpisz priorytet #1 ]</li>
+          <li style="font-size:13px;">[ wpisz priorytet #2 ]</li>
+          <li style="font-size:13px;">[ wpisz priorytet #3 ]</li>
+          <li style="font-size:13px;color:#888;">[ np. Playwright E2E tests dla pełnego flow ]</li>
+          <li style="font-size:13px;color:#888;">[ np. Azure Application Insights + alert policies ]</li>
+          <li style="font-size:13px;color:#888;">[ np. Docker Compose dla lokalnego devu ]</li>
+        </ol>
+      </div>
+      <div>
+        <div class="card danger" style="margin-bottom:12px;">
+          <h3 style="font-size:14px;color:#c0392b;">Trzymane na taśmie klejącej</h3>
+          <p style="font-size:12px;margin-top:6px;">[ wpisz co jest tymczasowe lub niepełne — bądźcie szczerzy ]</p>
+        </div>
+        <div class="card success">
+          <h3 style="font-size:14px;color:#1a7a40;">Definition of Done (docelowo)</h3>
+          <p style="font-size:12px;margin-top:6px;">Zero SQL Injection · Zero hardcoded credentials · bcrypt hasła · HTTPS · 80% test coverage · Playwright E2E · App Insights</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:auto;padding-top:16px;text-align:center;">
+      <p style="font-size:16px;color:#003366;font-weight:700;">Dziękujemy! Pytania?</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>10 / 10</span></div>
+</div>
+
+</body>
+</html>
