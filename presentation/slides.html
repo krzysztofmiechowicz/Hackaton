@@ -416,31 +416,34 @@
       <div>
         <h3>Działa <span class="badge green">DONE</span></h3>
         <ul>
-          <li style="color:#1a7a40;">[ wpisz co działa ]</li>
-          <li style="color:#1a7a40;">[ np. ASP.NET Core API — auth module ]</li>
-          <li style="color:#1a7a40;">[ np. React login page ]</li>
-          <li style="color:#1a7a40;">[ np. database_setup.sql + EF migrations ]</li>
+          <li style="color:#1a7a40;">Legacy uruchomiony na IIS Express (Windows 11)</li>
+          <li style="color:#1a7a40;">17 podatności bezpieczeństwa zidentyfikowanych i udokumentowanych</li>
+          <li style="color:#1a7a40;">Pełna dokumentacja migracji (5 dokumentów)</li>
+          <li style="color:#1a7a40;">Test cases: 60+ przypadków dla 5 modułów (stack-agnostic)</li>
+          <li style="color:#1a7a40;">User Stories (INVEST) dla wszystkich workflow</li>
+          <li style="color:#1a7a40;">CLAUDE.md — kontekst dla całego zespołu</li>
+          <li style="color:#1a7a40;">Plan migracji Strangler Fig — 5 faz, 14 tygodni</li>
         </ul>
       </div>
       <div>
         <h3>Scaffold <span class="badge blue">PARTIAL</span></h3>
         <ul>
-          <li style="color:#1a4fa0;">[ wpisz co jest scaffoldem ]</li>
-          <li style="color:#1a4fa0;">[ np. React inventory page — stub ]</li>
-          <li style="color:#1a4fa0;">[ np. Reports module — struktura bez impl ]</li>
+          <li style="color:#1a4fa0;">Quick Wins — 7 gotowych fixów dla legacy (10h pracy)</li>
+          <li style="color:#1a4fa0;">Target architecture — w pełni zaprojektowana</li>
+          <li style="color:#1a4fa0;">API endpoints — zdefiniowane, nie zaimplementowane</li>
+          <li style="color:#1a4fa0;">DB migration schema — przygotowana, nie uruchomiona</li>
         </ul>
       </div>
       <div>
-        <h3>Mockup <span class="badge grey">FAKED</span></h3>
+        <h3>Plan <span class="badge grey">NEXT</span></h3>
         <ul>
-          <li style="color:#888;">[ wpisz co jest udawane ]</li>
-          <li style="color:#888;">[ np. Redis cache — in-memory ]</li>
-          <li style="color:#888;">[ np. Email notifications ]</li>
+          <li style="color:#888;">ASP.NET Core 8 Web API</li>
+          <li style="color:#888;">React 18 + TypeScript frontend</li>
+          <li style="color:#888;">EF Core 8 + SQL Server 2022</li>
+          <li style="color:#888;">JWT auth + bcrypt passwords</li>
+          <li style="color:#888;">Docker + Azure App Insights</li>
         </ul>
       </div>
-    </div>
-    <div style="margin-top:auto;padding-top:16px;" class="card warning">
-      <p style="font-size:13px;"><strong>Uwaga:</strong> Uzupełnij tę slajdkę o konkretne wyniki hackathonu — co faktycznie uruchomiliście, a co jest szkieletem lub zaślepką.</p>
     </div>
   </div>
   <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>7 / 10</span></div>
@@ -460,7 +463,7 @@
       <tr><td>Auth</td><td>JWT Bearer (nie cookie)</td><td>CSRF nie dotyczy, stateless, skalowalne</td></tr>
       <tr><td>Hasła</td><td>bcrypt cost factor 12</td><td>Migracja on-login bez resetu użytkowników</td></tr>
       <tr><td>Transakcje</td><td>IDbContextTransaction</td><td>Wymóg atomowości: Sale + Stock update + Audit log</td></tr>
-      <tr><td>[ wpisz swoją ]</td><td>[ decyzja ]</td><td>[ uzasadnienie ]</td></tr>
+      <tr><td>Dokumentacja</td><td>CLAUDE.md jako shared context</td><td>Cały zespół pracuje z tym samym kontekstem — brak silosów wiedzy</td></tr>
     </table>
   </div>
   <div class="slide-footer"><span class="logo">TEAM 16</span><span>Anthropic Hackathon 2025</span><span>8 / 10</span></div>
@@ -477,27 +480,29 @@
       <div>
         <h3>Co działało najlepiej</h3>
         <ul>
-          <li>[ wpisz konkretny przykład ]</li>
-          <li>[ np. analiza podatności w ASP/VB6 — jednym promptem ]</li>
-          <li>[ np. generowanie EF Core migrations z istniejącego SQL ]</li>
-          <li>[ np. tworzenie xUnit testów na podstawie legacy stored proc ]</li>
-          <li>[ np. CLAUDE.md jako kontekst dla całego zespołu ]</li>
+          <li>Analiza 17 podatności w ASP/VB6 — jednym promptem, z numerami linii</li>
+          <li>Generowanie pełnej dokumentacji migracji (5 plików .md)</li>
+          <li>Tworzenie 60+ test cases na podstawie kodu legacy</li>
+          <li>CLAUDE.md — cały zespół pracuje z jednym spójnym kontekstem</li>
+          <li>Quick Wins — gotowe fragmenty kodu do natychmiastowego zastosowania</li>
+          <li>User Stories zgodne ze standardem INVEST</li>
         </ul>
         <div style="margin-top:16px;" class="card success">
           <strong>Największa oszczędność czasu:</strong><br>
-          <span style="font-size:12px;">[ wpisz gdzie Claude Code oszczędziło najwięcej czasu ]</span>
+          <span style="font-size:12px;">Analiza bezpieczeństwa + dokumentacja migracji — szacunkowo 2–3 dni pracy analitycznej w ciągu kilku godzin</span>
         </div>
       </div>
       <div>
         <h3>Co nas zaskoczyło</h3>
         <ul>
-          <li>[ wpisz co zaskoczyło ]</li>
-          <li>[ np. rozumienie kontekstu VB6 bez dodatkowego wyjaśniania ]</li>
-          <li>[ np. inicjatywa w wykrywaniu dodatkowych problemów ]</li>
+          <li>Rozumienie kontekstu VB6 i Classic ASP bez dodatkowych wyjaśnień</li>
+          <li>Inicjatywa w wykrywaniu podatności niewidocznych na pierwszy rzut oka</li>
+          <li>Spójność między dokumentami — plan migracji odnosi się do konk. linii kodu</li>
+          <li>Jakość test cases — od razu pokrywają edge cases (SQL injection, SESS-07)</li>
         </ul>
         <div style="margin-top:16px;" class="card warning">
           <strong>Wyzwania:</strong><br>
-          <span style="font-size:12px;">[ wpisz co działało gorzej lub wymagało korekty ]</span>
+          <span style="font-size:12px;">Weryfikacja czy wygenerowany kod nie zawiera subtelnych błędów logicznych — wymagała ręcznego review każdego fragmentu</span>
         </div>
       </div>
     </div>
@@ -516,18 +521,18 @@
       <div>
         <h3>Priorytety (w kolejności)</h3>
         <ol style="padding-left:20px; display:flex; flex-direction:column; gap:6px;">
-          <li style="font-size:13px;">[ wpisz priorytet #1 ]</li>
-          <li style="font-size:13px;">[ wpisz priorytet #2 ]</li>
-          <li style="font-size:13px;">[ wpisz priorytet #3 ]</li>
-          <li style="font-size:13px;color:#888;">[ np. Playwright E2E tests dla pełnego flow ]</li>
-          <li style="font-size:13px;color:#888;">[ np. Azure Application Insights + alert policies ]</li>
-          <li style="font-size:13px;color:#888;">[ np. Docker Compose dla lokalnego devu ]</li>
+          <li style="font-size:13px;">Zastosować Quick Wins w legacy (10h) — eliminacja SQL Injection i hardcoded credentials</li>
+          <li style="font-size:13px;">Faza 1: ASP.NET Core 8 scaffolding + EF Core baseline (tygodnie 1–2)</li>
+          <li style="font-size:13px;">Faza 2: JWT auth + bcrypt — migracja haseł on-login (tygodnie 3–4)</li>
+          <li style="font-size:13px;">Faza 3: Core API — wszystkie 5 modułów + xUnit + Testcontainers (tygodnie 5–8)</li>
+          <li style="font-size:13px;">Faza 4: React SPA + Playwright E2E (tygodnie 9–12)</li>
+          <li style="font-size:13px;">Faza 5: Blue-green deploy + DNS switch + archiwizacja legacy (tygodnie 13–14)</li>
         </ol>
       </div>
       <div>
         <div class="card danger" style="margin-bottom:12px;">
           <h3 style="font-size:14px;color:#c0392b;">Trzymane na taśmie klejącej</h3>
-          <p style="font-size:12px;margin-top:6px;">[ wpisz co jest tymczasowe lub niepełne — bądźcie szczerzy ]</p>
+          <p style="font-size:12px;margin-top:6px;">Legacy nadal ma 17 podatności — SQL Injection i plain-text hasła aktywne w produkcji do czasu zastosowania Quick Wins lub pełnej migracji</p>
         </div>
         <div class="card success">
           <h3 style="font-size:14px;color:#1a7a40;">Definition of Done (docelowo)</h3>
